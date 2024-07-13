@@ -1,28 +1,8 @@
 <header id="main-header">
     <div id="logo"><a href="/">WDE</a></div>
     <nav>
-        <ul>
-            <% if(locals.isAdmin){%>
-                <li><a href="/">shop</a></li>
-            <li><a href="/cart">cart</a></li>
-            <%}%>
-            <% if(locals.isAuth && !locals.isAdmin){%>
-            <li><a href="/orders">orders</a></li>
-            <% }%>
-            <% if(locals.isAdmin){%>
-                <li><a href="/admin/products">manage products</a></li>
-                <li><a href="/admin/orders">manage orders</a></li>
-                <% }%>
-                <% if(locals.isAuth){%>
-                    <li><a href="/signup">signup</a></li>
-                    <li><a href="/login">login</a></li>
-                    <% }%>
-            <% if(locals.isAuth){%>
-            <li><form action="/logout" method="POST">
-                <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-                <button>Logout</button></form></li>
-            <%}%>
-        </ul>
+        <%- include('nav-items') %>
+        
     </nav>
     <button id="mobile-menu-btn" >
         <span></span>
@@ -30,4 +10,8 @@
         <span></span>
     </button>
 </header>
-<aside></aside>
+<aside id="mobile-menu">
+    <nav>
+        <%- include('nav-items') %>
+    </nav>
+</aside>
