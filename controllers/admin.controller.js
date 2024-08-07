@@ -28,18 +28,42 @@ async function createNewProduct(req,res,next){
    res.redirect('/admin/products');
 }
 
-async function getUpdateProduct(req,res){
+async function getUpdateProduct(req,res,next){
   try{
  const product=await Product.findById(req.params.id);
  res.render('admin/products/update-product',{product:product});
   }catch(error){
    next(error);
-   return; 
   }
 }
 
-function updateProduct(){
+async function updateProduct(req,res,next){
+    const product=new Product({
+      ...req.body,
+      _id:req.params.id,
 
+    });
+    if(req.file){
+      product.replaceImage(req.file.filename);
+    }
+    try{
+    await product.save();
+    }catch(error){
+      next(error);
+      return;
+    }
+    res.redirect('/admin/products');
+}
+
+async function deleteProduct(req,res,next){
+  let product
+  try{
+  product=await Product.findById(req.params.id);
+  await product.remove();
+  }catch(error){
+    return next(error)
+  }
+  res.json({message:"Deleted Product"});
 }
 
 module.exports={
@@ -48,4 +72,5 @@ module.exports={
     createNewProduct:createNewProduct,
     getUpdateProduct:getUpdateProduct,
     updateProduct:updateProduct,
+    deleteProduct:deleteProduct,
 }

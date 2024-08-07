@@ -7,8 +7,7 @@ class Product{
         this.price= +productData.price;
         this.description=productData.description;
         this.image=productData.image;
-        this.imagePath=`product-data/images/${productData.image}`;
-        this.imageUrl= `/product/assets/images/${productData.image}`;
+        this.updateImageData();
         if(productData._id){
         this.id=productData._id.toString();
         }
@@ -16,7 +15,7 @@ class Product{
     static async findById(productId){
         let prodId;
         try{
-        const prodId=new mongodb.ObjectId(productId);
+         prodId=new mongodb.ObjectId(productId);
         }catch(error){
             error.code=404;
             throw error;
@@ -28,7 +27,7 @@ class Product{
             throw error;
         }
 
-        return product;
+        return new Product(product);
     }
     static async findAll(){
         const products=await db.getDb().collection('products').find().toArray();
@@ -36,16 +35,41 @@ class Product{
             return new Product(productDocument);
         });
     }
+    updateImageData(){
+        this.imagePath=`product-data/images/${this.image}`;
+        this.imageUrl= `/product/assets/images/${this.image}`;
+    }
+
     async save(){
         const productData={
             title:this.title,
             summary:this.summary,
             price:this.price,
             description:this.description, 
-            image:this.image  
+            image:this.image,  
         };
-       await db.getDb().collection('products').insertOne(productData);
+        if(this.id){
+            const productId=new mongodb.ObjectId(this.id);
+            if(!this.image){
+                delete productData.image;
+            }
+            db.getDb().collection('products').updateOne({_id:productId},{
+                $set:productData,
+            });
+        }else{
+            await db.getDb().collection('products').insertOne(productData);
+        }
+       
     }
+    async replaceImage(newImage){
+        this.image=newImage;
+        this.updateImageData();
+    }
+
+    async remove(){
+        const productId=new mongodb.ObjectId(this.id);
+        db.getDb().collection('products').deleteOne({_id:productId});
+        }
 }
 
 module.exports=Product;

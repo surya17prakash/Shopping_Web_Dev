@@ -11,6 +11,7 @@ const createSessionConfig=require('./config/session');
 const addCsrfTokenMiddleware=require('./middlewares/csrf-token');
 const errorHandlerMiddleware=require('./middlewares/error-handler');
 const checkAuthStatusMiddleware=require('./middlewares/check-auth');
+const protectRouteMiddleware=require('./middlewares/protect-routes');
 const adminRoutes=require('./routes/admin.routes');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(checkAuthStatusMiddleware);
 app.use(baseRoutes);
 app.use(authRoutes);
 app.use(productRoutes);
+app.use(protectRouteMiddleware);
 app.use('/admin',adminRoutes);
 app.use(errorHandlerMiddleware);
 db.connectToDatabase().then(function(){
