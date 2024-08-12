@@ -2,7 +2,7 @@
 <ul class="nav-items">
     <% if(!locals.isAuth){%>
     <li><a href="/">shop</a></li>
-<li><a href="/cart">cart</a></li>
+<li><a href="/cart">cart <span class="badge">0</span></a></li>
 <%}%>
 <% if(locals.isAuth && !locals.isAdmin){%>
 <li><a href="/orders">orders</a></li>
