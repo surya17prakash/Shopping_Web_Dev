@@ -14,6 +14,7 @@ const errorHandlerMiddleware=require('./middlewares/error-handler');
 const cartMiddleware=require('./middlewares/cart');
 const checkAuthStatusMiddleware=require('./middlewares/check-auth');
 const protectRouteMiddleware=require('./middlewares/protect-routes');
+const ordersRoutes=require('./routes/orders.routes');
 
 const adminRoutes=require('./routes/admin.routes');
 
@@ -37,6 +38,7 @@ app.use(authRoutes);
 app.use(productRoutes);
 app.use('/cart',cartRoutes);
 app.use(protectRouteMiddleware);
+app.use('/orders',ordersRoutes);
 app.use('/admin',adminRoutes);
 app.use(errorHandlerMiddleware);
 db.connectToDatabase().then(function(){
